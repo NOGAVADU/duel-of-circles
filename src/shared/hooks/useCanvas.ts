@@ -1,7 +1,6 @@
 import {useEffect, useRef} from "react";
 
 export function useCanvas(draw: (ctx: CanvasRenderingContext2D) => void) {
-
     const canvasRef = useRef(null)
 
     useEffect(() => {

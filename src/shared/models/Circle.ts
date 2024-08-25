@@ -1,4 +1,4 @@
-export abstract class Circle {
+export class Circle {
     canvas: HTMLCanvasElement;
     x: number;
     y: number;
@@ -19,7 +19,7 @@ export abstract class Circle {
         this.color = color;
     }
 
-    protected draw(ctx: CanvasRenderingContext2D) {
+    draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
         ctx.closePath();
