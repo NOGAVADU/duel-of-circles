@@ -74,6 +74,36 @@ export function useGameState(
         }
     }
 
+    const setLeftDuelantState = (state: DuelantState) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantRightState: getActualRightDuelantState(),
+            duelantLeftState: {
+                ...getActualLeftDuelantState(),
+                ...state
+            }
+        }))
+    }
+
+    const setRightDuelantState = (state: DuelantState) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantLeftState: getActualLeftDuelantState(),
+            duelantRightState: {
+                ...getActualRightDuelantState(),
+                ...state
+            }
+        }))
+    }
+
+    const handleAppStateUpdate = () => {
+        setState({
+            ...state,
+            duelantLeftState: getActualLeftDuelantState(),
+            duelantRightState: getActualRightDuelantState(),
+        })
+    }
+
     const incrementDuelantLeftScore = () => {
         setState(prevState => ({
             ...prevState,
@@ -98,28 +128,6 @@ export function useGameState(
         }))
     }
 
-    const setLeftDuelantState = (state: DuelantState) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantRightState: getActualRightDuelantState(),
-            duelantLeftState: {
-                ...getActualLeftDuelantState(),
-                ...state
-            }
-        }))
-    }
-
-    const setRightDuelantState = (state: DuelantState) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantLeftState: getActualLeftDuelantState(),
-            duelantRightState: {
-                ...getActualRightDuelantState(),
-                ...state
-            }
-        }))
-    }
-
     const objectsToDraw = [duelantLeft, duelantRight]
 
     return {
@@ -127,5 +135,6 @@ export function useGameState(
         objectsToDraw,
         setLeftDuelantState,
         setRightDuelantState,
+        handleAppStateUpdate
     }
 }
