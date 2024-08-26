@@ -15,6 +15,8 @@ export interface DuelantState {
     color: string,
     speed: number,
     spells: Spell[],
+    spellsColor: string,
+    spellRate: number,
 }
 
 const initialState: GameState = {
@@ -24,6 +26,8 @@ const initialState: GameState = {
         color: '#000',
         speed: 5,
         spells: [],
+        spellsColor: '#000',
+        spellRate: 1,
     },
     duelantRightState: {
         x: 920,
@@ -31,6 +35,8 @@ const initialState: GameState = {
         color: '#000',
         speed: -5,
         spells: [],
+        spellsColor: '#000',
+        spellRate: 1,
     },
     score: {leftDuelantScore: 0, rightDuelantScore: 0},
 }
@@ -61,12 +67,12 @@ export function useGameState() {
                 duelantLeft.x,
                 duelantLeft.y,
                 15,
-                '#000',
+                state.duelantLeftState.spellsColor,
                 10,
                 duelantRight,
                 incrementDuelantLeftScore
             ))
-    }, 1000)
+    }, 1000 / state.duelantLeftState.spellRate)
 
     setInterval(() => {
         duelantRight.spells.push(
@@ -74,38 +80,40 @@ export function useGameState() {
                 duelantRight.x,
                 duelantRight.y,
                 15,
-                '#000',
+                state.duelantRightState.spellsColor,
                 -10,
-                 duelantLeft,
+                duelantLeft,
                 incrementDuelantRightScore
             ))
-    }, 1000)
+    }, 1000 / state.duelantRightState.spellRate)
 
-    const getActualDuelantState = () => {
+    const getActualLeftDuelantState = () => {
         return {
-            duelantLeftState: {
-                ...state.duelantLeftState,
-                x: duelantLeft.x,
-                y: duelantLeft.y,
-                speed: duelantLeft.speed,
-                spells: duelantLeft.spells,
-                enemy: duelantRight,
-            },
-            duelantRightState: {
-                ...state.duelantRightState,
-                x: duelantRight.x,
-                y: duelantRight.y,
-                speed: duelantRight.speed,
-                spells: duelantRight.spells,
-                enemy: duelantLeft,
-            },
+            ...state.duelantLeftState,
+            x: duelantLeft.x,
+            y: duelantLeft.y,
+            speed: duelantLeft.speed,
+            spells: duelantLeft.spells,
+            enemy: duelantRight,
+        }
+    }
+
+    const getActualRightDuelantState = () => {
+        return {
+            ...state.duelantRightState,
+            x: duelantRight.x,
+            y: duelantRight.y,
+            speed: duelantRight.speed,
+            spells: duelantRight.spells,
+            enemy: duelantLeft,
         }
     }
 
     const incrementDuelantLeftScore = () => {
         setState(prevState => ({
             ...prevState,
-            ...getActualDuelantState(),
+            duelantLeftState: getActualLeftDuelantState(),
+            duelantRightState: getActualRightDuelantState(),
             score: {
                 leftDuelantScore: state.score.leftDuelantScore + 1,
                 rightDuelantScore: state.score.rightDuelantScore
@@ -116,7 +124,8 @@ export function useGameState() {
     const incrementDuelantRightScore = () => {
         setState(prevState => ({
             ...prevState,
-            ...getActualDuelantState(),
+            duelantLeftState: getActualLeftDuelantState(),
+            duelantRightState: getActualRightDuelantState(),
             score: {
                 leftDuelantScore: state.score.leftDuelantScore,
                 rightDuelantScore: state.score.rightDuelantScore + 1
@@ -124,8 +133,29 @@ export function useGameState() {
         }))
     }
 
+    const setLeftDuelantColor = (color: string) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantRightState: getActualRightDuelantState(),
+            duelantLeftState: {
+                ...getActualLeftDuelantState(),
+                color
+            }
+        }))
+    }
+
+    const setRightDuelantColor = (color: string) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantRightState: {
+                ...getActualRightDuelantState(),
+                color
+            }
+        }))
+    }
+
 
     const objectsToDraw = [duelantLeft, duelantRight]
 
-    return {state, objectsToDraw}
+    return {state, objectsToDraw, setLeftDuelantColor, setRightDuelantColor}
 }
