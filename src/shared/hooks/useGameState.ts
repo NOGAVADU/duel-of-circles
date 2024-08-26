@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Duelant} from "../models";
 import {Spell} from "../models/Spell.ts";
 import {getRandomInt} from "../utils";
@@ -87,25 +87,23 @@ export function useGameState() {
             ))
     }, 1000 / state.duelantRightState.spellRate)
 
-    const getActualLeftDuelantState = () => {
+    const getActualLeftDuelantState = (): DuelantState => {
         return {
             ...state.duelantLeftState,
             x: duelantLeft.x,
             y: duelantLeft.y,
             speed: duelantLeft.speed,
             spells: duelantLeft.spells,
-            enemy: duelantRight,
         }
     }
 
-    const getActualRightDuelantState = () => {
+    const getActualRightDuelantState = (): DuelantState => {
         return {
             ...state.duelantRightState,
             x: duelantRight.x,
             y: duelantRight.y,
             speed: duelantRight.speed,
             spells: duelantRight.spells,
-            enemy: duelantLeft,
         }
     }
 
@@ -154,8 +152,84 @@ export function useGameState() {
         }))
     }
 
+    const setLeftDuelantSpellColor = (color: string) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantRightState: getActualRightDuelantState(),
+            duelantLeftState: {
+                ...getActualLeftDuelantState(),
+                spellsColor: color
+            }
+        }))
+    }
+
+    const setRightDuelantSpellColor = (color: string) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantLeftState: getActualLeftDuelantState(),
+            duelantRightState: {
+                ...getActualRightDuelantState(),
+                spellsColor: color
+            }
+        }))
+    }
+
+    const setLeftDuelantSpellRate = (spellRate: number) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantRightState: getActualRightDuelantState(),
+            duelantLeftState: {
+                ...getActualLeftDuelantState(),
+                spellRate
+            }
+        }))
+    }
+
+    const setRightDuelantSpellRate = (spellRate: number) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantLeftState: getActualLeftDuelantState(),
+            duelantRightState: {
+                ...getActualRightDuelantState(),
+                spellRate
+            }
+        }))
+    }
+
+    const setLeftDuelantSpeed = (speed: number) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantRightState: getActualRightDuelantState(),
+            duelantLeftState: {
+                ...getActualLeftDuelantState(),
+                speed
+            }
+        }))
+    }
+
+    const setRightDuelantSpeed = (speed: number) => {
+        setState(prevState => ({
+            ...prevState,
+            duelantLeftState: getActualLeftDuelantState(),
+            duelantRightState: {
+                ...getActualRightDuelantState(),
+                speed
+            }
+        }))
+    }
 
     const objectsToDraw = [duelantLeft, duelantRight]
 
-    return {state, objectsToDraw, setLeftDuelantColor, setRightDuelantColor}
+    return {
+        state,
+        objectsToDraw,
+        setLeftDuelantColor,
+        setRightDuelantColor,
+        setLeftDuelantSpellColor,
+        setRightDuelantSpellColor,
+        setLeftDuelantSpellRate,
+        setRightDuelantSpellRate,
+        setLeftDuelantSpeed,
+        setRightDuelantSpeed,
+    }
 }
