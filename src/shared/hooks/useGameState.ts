@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {Duelant} from "../models";
 import {Spell} from "../models/Spell.ts";
+import {getRandomInt} from "../utils";
 
 export interface GameState {
     duelantLeftState: DuelantState;
@@ -14,20 +15,20 @@ export interface DuelantState {
     y: number,
     color: string,
     speed: number,
-    spells: Spell[];
+    spells: Spell[],
 }
 
 const initialState: GameState = {
     duelantLeftState: {
         x: 40,
-        y: 270,
+        y: getRandomInt(40, 920),
         color: '#000',
         speed: 5,
         spells: [],
     },
     duelantRightState: {
         x: 920,
-        y: 270,
+        y: getRandomInt(40, 920),
         color: '#000',
         speed: -5,
         spells: [],
@@ -57,55 +58,73 @@ export function useGameState() {
     )
 
     setInterval(() => {
-        duelantLeft.spells.push(new Spell(duelantLeft.x, duelantLeft.y, 15, '#000', 10, duelantRight, incrementDuelantLeftScore))
+        duelantLeft.spells.push(
+            new Spell(
+                duelantLeft.x,
+                duelantLeft.y,
+                15,
+                '#000',
+                10,
+                duelantRight,
+                incrementDuelantLeftScore
+            ))
     }, 1000)
 
     setInterval(() => {
-        duelantRight.spells.push(new Spell(duelantRight.x, duelantRight.y, 15, '#000', -10, duelantLeft, incrementDuelantRightScore))
+        duelantRight.spells.push(
+            new Spell(
+                duelantRight.x,
+                duelantRight.y,
+                15,
+                '#000',
+                -10,
+                 duelantLeft,
+                incrementDuelantRightScore
+            ))
     }, 1000)
 
-    const getActualGameState = (): GameState => {
+    const getActualDuelantState = () => {
         return {
             duelantLeftState: {
                 ...state.duelantLeftState,
                 x: duelantLeft.x,
                 y: duelantLeft.y,
                 speed: duelantLeft.speed,
-                spells: duelantLeft.spells
+                spells: duelantLeft.spells,
+                enemy: duelantRight,
             },
             duelantRightState: {
                 ...state.duelantRightState,
                 x: duelantRight.x,
                 y: duelantRight.y,
                 speed: duelantRight.speed,
-                spells: duelantRight.spells
-            },
-            score: {
-                leftDuelantScore: state.score.leftDuelantScore,
-                rightDuelantScore: state.score.rightDuelantScore
+                spells: duelantRight.spells,
+                enemy: duelantLeft,
             },
             spells: [...duelantLeft.spells, ...duelantRight.spells]
         }
     }
 
     const incrementDuelantLeftScore = () => {
-        setState({
-            ...getActualGameState(),
+        setState(prevState => ({
+            ...prevState,
+            ...getActualDuelantState(),
             score: {
                 leftDuelantScore: state.score.leftDuelantScore + 1,
                 rightDuelantScore: state.score.rightDuelantScore
             },
-        })
+        }))
     }
 
     const incrementDuelantRightScore = () => {
-        setState({
-            ...getActualGameState(),
+        setState(prevState => ({
+            ...prevState,
+            ...getActualDuelantState(),
             score: {
                 leftDuelantScore: state.score.leftDuelantScore,
                 rightDuelantScore: state.score.rightDuelantScore + 1
             },
-        })
+        }))
     }
 
 

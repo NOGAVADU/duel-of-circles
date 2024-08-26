@@ -25,6 +25,7 @@ export class Spell extends Circle {
     init(context: CanvasRenderingContext2D) {
         this.draw(context);
         this.activeTargetCollide(context)
+        this.activeWallCollide(context)
     }
 
     draw(context: CanvasRenderingContext2D) {
@@ -51,6 +52,7 @@ export class Spell extends Circle {
             this.radius + this.target.radius
         )) {
             if (!this.destroyed) {
+                console.log('hit')
                 this.onTargetHit()
                 this.destroySpell(context)
             }

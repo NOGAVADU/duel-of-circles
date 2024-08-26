@@ -21,9 +21,19 @@ function App() {
     return (
         <>
             <main className="main">
-                <Canvas canvasSize={canvasSize} canvasRef={canvasRef}/>
-                <div>{`${game.state.score.leftDuelantScore} / ${game.state.score.rightDuelantScore}`}</div>
+                <div className='battleground'>
+                    <div
+                        className='score'>
+                        {game.state.score.leftDuelantScore < 10 ? `0${game.state.score.leftDuelantScore}` : game.state.score.leftDuelantScore}
+                    </div>
+                    <Canvas canvasSize={canvasSize} canvasRef={canvasRef}/>
+                    <div
+                        className='score'>
+                        {game.state.score.rightDuelantScore < 10 ? `0${game.state.score.rightDuelantScore}` : game.state.score.rightDuelantScore}
+                    </div>
+                </div>
             </main>
+
             <footer className="footer">
                 Мосолов Даниил | tg: @daaaniiiiiil
             </footer>

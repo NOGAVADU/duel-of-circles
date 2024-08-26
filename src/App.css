@@ -22,6 +22,17 @@ body,
     flex-grow: 1;
 }
 
+.battleground {
+    display: grid;
+    grid-template:  1fr / 100px 1fr 100px;
+    gap: 3rem;
+    align-items: center;
+}
+
+.score {
+    font-size: 90px;
+}
+
 .footer {
     font-weight: 500;
     padding: 0.5rem;
