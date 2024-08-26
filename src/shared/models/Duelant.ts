@@ -1,13 +1,12 @@
-import {Circle} from "./Circle.ts";
+import {MovingCircle} from "./MovingCircle.ts";
 import {Spell} from "./Spell.ts";
 
-export class Duelant extends Circle {
+export class Duelant extends MovingCircle {
     mouseX: number = 0;
     mouseY: number = 0;
-    speed: number;
     spells: Spell[] = [];
-    isClicked: boolean = false;
     onClick: () => void;
+    isClicked: boolean = false;
 
     constructor(
         x: number,
@@ -17,8 +16,7 @@ export class Duelant extends Circle {
         speed: number,
         onClick: () => void,
     ) {
-        super(x, y, radius, color);
-        this.speed = speed;
+        super(x, y, radius, color, speed);
         this.onClick = onClick
     }
 
@@ -99,7 +97,7 @@ export class Duelant extends Circle {
                 if (
                     Math.sqrt(
                         Math.pow(this.mouseX - this.x, 2) + Math.pow(this.mouseY - this.y, 2)
-                    ) <= this.radius
+                    ) <= this.radius + 5
                 ) {
                     this.onClick()
                     this.isClicked = true

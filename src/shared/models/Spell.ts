@@ -1,8 +1,7 @@
-import {Circle} from "./Circle.ts";
+import {MovingCircle} from "./MovingCircle.ts";
 import {Duelant} from "./Duelant.ts";
 
-export class Spell extends Circle {
-    speed: number;
+export class Spell extends MovingCircle {
     destroyed: boolean = false;
     target: Duelant;
     onTargetHit: () => void;
@@ -16,8 +15,7 @@ export class Spell extends Circle {
         target: Duelant,
         onTargetHit: () => void,
     ) {
-        super(x, y, radius, color);
-        this.speed = speed;
+        super(x, y, radius, color, speed);
         this.target = target;
         this.onTargetHit = onTargetHit;
     }
