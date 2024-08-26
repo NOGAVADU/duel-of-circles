@@ -23,6 +23,9 @@ function App() {
             <main className="main">
                 <Canvas canvasSize={canvasSize} canvasRef={canvasRef}/>
             </main>
+            <button onClick={() => game.setState()}>
+                Принудительное обновление состояния
+            </button>
             <footer className="footer">
                 Мосолов Даниил | tg: @daaaniiiiiil
             </footer>
