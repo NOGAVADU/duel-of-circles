@@ -6,6 +6,10 @@ import {useState} from "react";
 
 const canvasSize = {width: 960, height: 540}
 
+const getPrettyScore = (score: number) => {
+    return score < 10 ? `0${score}` : score;
+}
+
 function App() {
     const canvasRef = useCanvas(draw)
     const game = useGameState(redactLeftDuelant, redactRightDuelant);
@@ -45,20 +49,12 @@ function App() {
         <>
             <main className="main">
                 <div className='battleground'>
-                    <div
-                        className='score'>
-                        {game.state.score.leftDuelantScore < 10 ?
-                            `0${game.state.score.leftDuelantScore}` :
-                            game.state.score.leftDuelantScore
-                        }
+                    <div className='score'>
+                        {getPrettyScore(game.state.score.leftDuelantScore)}
                     </div>
                     <Canvas canvasSize={canvasSize} canvasRef={canvasRef}/>
-                    <div
-                        className='score'>
-                        {game.state.score.rightDuelantScore < 10 ?
-                            `0${game.state.score.rightDuelantScore}` :
-                            game.state.score.rightDuelantScore
-                        }
+                    <div className='score'>
+                        {getPrettyScore(game.state.score.rightDuelantScore)}
                     </div>
                 </div>
             </main>
