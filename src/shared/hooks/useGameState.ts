@@ -6,7 +6,6 @@ import {getRandomInt} from "../utils";
 export interface GameState {
     duelantLeftState: DuelantState;
     duelantRightState: DuelantState;
-    spells: Spell[]
     score: { leftDuelantScore: number, rightDuelantScore: number };
 }
 
@@ -34,7 +33,6 @@ const initialState: GameState = {
         spells: [],
     },
     score: {leftDuelantScore: 0, rightDuelantScore: 0},
-    spells: []
 }
 
 export function useGameState() {
@@ -101,7 +99,6 @@ export function useGameState() {
                 spells: duelantRight.spells,
                 enemy: duelantLeft,
             },
-            spells: [...duelantLeft.spells, ...duelantRight.spells]
         }
     }
 
@@ -128,7 +125,7 @@ export function useGameState() {
     }
 
 
-    const objectsToDraw = [duelantLeft, duelantRight, ...state.spells.filter(s => !s.destroyed)]
+    const objectsToDraw = [duelantLeft, duelantRight]
 
     return {state, objectsToDraw}
 }

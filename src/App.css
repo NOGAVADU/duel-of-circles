@@ -24,13 +24,14 @@ body,
 
 .battleground {
     display: grid;
-    grid-template:  1fr / 100px 1fr 100px;
-    gap: 3rem;
+    grid-template:  1fr / 150px 1fr 150px;
+    gap: 5rem;
     align-items: center;
 }
 
 .score {
-    font-size: 90px;
+    font-size: 150px;
+    color: rgba(0, 0, 0, 0.09);
 }
 
 .footer {
