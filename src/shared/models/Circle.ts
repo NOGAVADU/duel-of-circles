@@ -1,18 +1,15 @@
 export class Circle {
-    canvas: HTMLCanvasElement;
     x: number;
     y: number;
     radius: number;
     color;
 
     constructor(
-        canvas: HTMLCanvasElement,
         x: number,
         y: number,
         radius: number,
         color: string,
     ) {
-        this.canvas = canvas;
         this.x = x;
         this.y = y;
         this.radius = radius;

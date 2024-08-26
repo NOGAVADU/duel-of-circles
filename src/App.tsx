@@ -1,16 +1,21 @@
 import './App.css'
 import {Canvas} from "./components";
-import {useCanvas} from "./shared/hooks";
-import {useState} from "react";
+import {useCanvas, useGameState} from "./shared/hooks";
 
 const canvasSize = {width: 960, height: 540}
 
 function App() {
     const canvasRef = useCanvas(draw)
-    const [count, setCount] = useState(0)
+    const game = useGameState()
 
-    function draw(ctx: CanvasRenderingContext2D) {
-        ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    function draw(context: CanvasRenderingContext2D) {
+        if (!canvasRef.current) return;
+
+        context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+
+        game.objects.forEach(object => {
+            object.init(context);
+        })
     }
 
     return (
@@ -18,11 +23,11 @@ function App() {
             <main className="main">
                 <Canvas canvasSize={canvasSize} canvasRef={canvasRef}/>
             </main>
-            <button onClick={() => setCount(count + 1)}>{count} : Принудительных обновлений состояний</button>
             <footer className="footer">
                 Мосолов Даниил | tg: @daaaniiiiiil
             </footer>
         </>
     )
 }
+
 export default App
