@@ -2,11 +2,14 @@ import {MovingCircle} from "./MovingCircle.ts";
 import {Spell} from "./Spell.ts";
 
 export class Duelant extends MovingCircle {
-    mouseX: number = 0;
-    mouseY: number = 0;
+    mouseState: {
+        x: number,
+        y: number,
+        hasCoordsListener: boolean,
+        clickAction: () => void,
+        clicked: boolean
+    };
     spells: Spell[] = [];
-    onClick: () => void;
-    isClicked: boolean = false;
 
     constructor(
         x: number,
@@ -17,16 +20,21 @@ export class Duelant extends MovingCircle {
         onClick: () => void,
     ) {
         super(x, y, radius, color, speed);
-        this.onClick = onClick
+        this.mouseState = {
+            x: 0,
+            y: 0,
+            hasCoordsListener: false,
+            clickAction: onClick,
+            clicked: false
+        }
     }
 
     init(context: CanvasRenderingContext2D) {
         this.draw(context);
         this.activeWallCollide(context)
-        this.activeCursorWatch(context)
-        this.activeCursorCollide()
-        this.activeClickAction(context)
         this.activeSpellShooting(context)
+        this.activeMouseEventsListener(context)
+        this.activeCursorCollide()
     }
 
     draw(context: CanvasRenderingContext2D) {
@@ -51,17 +59,17 @@ export class Duelant extends MovingCircle {
     }
 
     activeCursorCollide() {
-        if (!this.mouseX && !this.mouseY) return
+        if (!this.mouseState.hasCoordsListener) return
 
-        if (this.mouseX < this.x + this.radius && this.mouseX > this.x - this.radius) {
+        if (this.mouseState.x < this.x + this.radius && this.mouseState.x > this.x - this.radius) {
             if (this.speed > 0) {
-                if (this.mouseY > this.y + this.radius - 10 &&
-                    this.mouseY < this.y + this.radius + 5) {
+                if (this.mouseState.y > this.y + this.radius - 10 &&
+                    this.mouseState.y < this.y + this.radius + 5) {
                     this.speed = -this.speed;
                 }
             } else {
-                if (this.mouseY > this.y - this.radius - 5 &&
-                    this.mouseY < this.y - this.radius + 10) {
+                if (this.mouseState.y > this.y - this.radius - 5 &&
+                    this.mouseState.y < this.y - this.radius + 10) {
                     this.speed = -this.speed
                 }
             }
@@ -74,39 +82,41 @@ export class Duelant extends MovingCircle {
         this.spells.forEach(s => s.init(context))
     }
 
-    activeCursorWatch(context: CanvasRenderingContext2D) {
+    activeMouseEventsListener(context: CanvasRenderingContext2D) {
         const getMouseCoords = (e: MouseEvent) => {
             const rect = context.canvas.getBoundingClientRect();
             if (rect) {
-                this.mouseX = e.clientX - rect.left;
-                this.mouseY = e.clientY - rect.top;
+                this.mouseState.x = e.clientX - rect.left;
+                this.mouseState.y = e.clientY - rect.top;
             }
         }
 
-        context.canvas.addEventListener("mousemove", getMouseCoords)
-        context.canvas.addEventListener("mouseout", () => {
-            context.canvas.removeEventListener("mousemove", getMouseCoords)
-            this.mouseX = 0;
-            this.mouseY = 0;
-        })
-    }
-
-    activeClickAction(context: CanvasRenderingContext2D) {
-        context.canvas.addEventListener("click", () => {
-            if (!this.isClicked) {
-                if (
-                    Math.sqrt(
-                        Math.pow(this.mouseX - this.x, 2) + Math.pow(this.mouseY - this.y, 2)
-                    ) <= this.radius + 5
-                ) {
-                    this.onClick()
-                    this.isClicked = true
-                }
+        const handleClick = () => {
+            if (Math.sqrt(
+                Math.pow(this.mouseState.x - this.x, 2) + Math.pow(this.mouseState.y - this.y, 2
+                )) <= this.radius) {
+                this.mouseState.clickAction()
+                this.mouseState.clicked = true;
             }
-        })
-        context.canvas.addEventListener("mouseout", () => {
-            context.canvas.removeEventListener("click", this.onClick)
-            this.isClicked = false
-        })
+        }
+
+        if (!this.mouseState.hasCoordsListener) {
+            context.canvas.addEventListener("mousemove", getMouseCoords);
+            this.mouseState.clicked = false;
+            this.mouseState.hasCoordsListener = true;
+        }
+
+        if (this.mouseState.hasCoordsListener) {
+            context.canvas.addEventListener("click", handleClick)
+
+
+            context.canvas.addEventListener("mouseout", () => {
+                if (this.mouseState.hasCoordsListener) {
+                    context.canvas.removeEventListener("mousemove", getMouseCoords)
+                    context.canvas.removeEventListener("click", handleClick)
+                    this.mouseState.hasCoordsListener = false
+                }
+            })
+        }
     }
 }
