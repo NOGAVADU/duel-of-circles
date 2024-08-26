@@ -1,6 +1,6 @@
 import './App.css'
 import {Canvas} from "./components";
-import {DuelantState, useCanvas, useGameState} from "./shared/hooks";
+import {useCanvas, useGameState} from "./shared/hooks";
 import DuelantRedactor from "./components/DuelantRedactor/DuelantRedactor.tsx";
 import {useState} from "react";
 
@@ -8,9 +8,12 @@ const canvasSize = {width: 960, height: 540}
 
 function App() {
     const canvasRef = useCanvas(draw)
-    const [isRedactorVisible, setIsRedactorVisible] = useState<boolean>(true);
-    const [duelantToRedact, setDuelantToRedact] = useState<DuelantState | null>(null);
-    const game = useGameState(redactDuelant)
+    const game = useGameState(redactLeftDuelant, redactRightDuelant);
+    const [redactorState, setRedactorState] = useState({
+        isRedactorVisible: false,
+        duelantToRedact: game.state.duelantLeftState,
+        onSave: game.setLeftDuelantState
+    });
 
     function draw(context: CanvasRenderingContext2D) {
         if (!canvasRef.current) return;
@@ -22,9 +25,20 @@ function App() {
         })
     }
 
-    function redactDuelant(duelant: DuelantState) {
-        setIsRedactorVisible(true);
-        setDuelantToRedact(duelant);
+    function redactLeftDuelant() {
+        setRedactorState({
+            isRedactorVisible: true,
+            duelantToRedact: game.state.duelantLeftState,
+            onSave: game.setLeftDuelantState,
+        })
+    }
+
+    function redactRightDuelant() {
+        setRedactorState({
+            isRedactorVisible: true,
+            duelantToRedact: game.state.duelantRightState,
+            onSave: game.setRightDuelantState,
+        })
     }
 
     return (
@@ -52,11 +66,8 @@ function App() {
             <footer className="footer">
                 Мосолов Даниил | tg: @daaaniiiiiil
             </footer>
-            {isRedactorVisible && (
-                <DuelantRedactor
-                    duelant={duelantToRedact ?? game.state.duelantLeftState}
-                    setIsRedactorVisible={setIsRedactorVisible}
-                />)}
+            {redactorState.isRedactorVisible && (
+                <DuelantRedactor redactorState={redactorState} setRedactorState={setRedactorState}/>)}
         </>
     )
 }

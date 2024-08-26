@@ -40,7 +40,10 @@ const initialState: GameState = {
     score: {leftDuelantScore: 0, rightDuelantScore: 0},
 }
 
-export function useGameState(onDuelantClick: (duelant: DuelantState) => void) {
+export function useGameState(
+    onLeftDuelantClick: (duelant: DuelantState) => void,
+    onRightDuelantClick: (duelant: DuelantState) => void,
+) {
 
     const [state, setState] = useState<GameState>({...initialState})
 
@@ -50,7 +53,7 @@ export function useGameState(onDuelantClick: (duelant: DuelantState) => void) {
         30,
         state.duelantLeftState.color,
         state.duelantLeftState.speed,
-        () => onDuelantClick(state.duelantLeftState)
+        () => onLeftDuelantClick(state.duelantLeftState)
     )
 
     const duelantRight = new Duelant(
@@ -59,7 +62,7 @@ export function useGameState(onDuelantClick: (duelant: DuelantState) => void) {
         30,
         state.duelantRightState.color,
         state.duelantRightState.speed,
-        () => onDuelantClick(state.duelantRightState)
+        () => onRightDuelantClick(state.duelantRightState)
     )
 
     setInterval(() => {
@@ -153,7 +156,6 @@ export function useGameState(onDuelantClick: (duelant: DuelantState) => void) {
             }
         }))
     }
-
 
     const objectsToDraw = [duelantLeft, duelantRight]
 
