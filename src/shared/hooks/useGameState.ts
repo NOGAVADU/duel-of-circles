@@ -1,36 +1,14 @@
 import {useState} from "react";
 import {Duelant, Spell} from "../models";
-import {getRandomInt} from "../utils";
 import {DuelantState, GameState} from "../types";
-
-const initialState: GameState = {
-    duelantLeftState: {
-        x: 40,
-        y: getRandomInt(40, 920),
-        color: '#000',
-        speed: 5,
-        spells: [],
-        spellsColor: '#000',
-        spellRate: 1,
-    },
-    duelantRightState: {
-        x: 920,
-        y: getRandomInt(40, 920),
-        color: '#000',
-        speed: -5,
-        spells: [],
-        spellsColor: '#000',
-        spellRate: 1,
-    },
-    score: {leftDuelantScore: 0, rightDuelantScore: 0},
-}
+import {gameStateInitial} from "../const";
 
 export function useGameState(
     onLeftDuelantClick: (duelant: DuelantState) => void,
     onRightDuelantClick: (duelant: DuelantState) => void,
 ) {
 
-    const [state, setState] = useState<GameState>({...initialState})
+    const [state, setState] = useState<GameState>({...gameStateInitial})
 
     const duelantLeft = new Duelant(
         state.duelantLeftState.x,
