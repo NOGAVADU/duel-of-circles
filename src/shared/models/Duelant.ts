@@ -92,11 +92,13 @@ export class Duelant extends MovingCircle {
         }
 
         const handleClick = () => {
-            if (Math.sqrt(
-                Math.pow(this.mouseState.x - this.x, 2) + Math.pow(this.mouseState.y - this.y, 2
-                )) <= this.radius) {
-                this.mouseState.clickAction()
-                this.mouseState.clicked = true;
+            if (!this.mouseState.clicked) {
+                if (Math.sqrt(
+                    Math.pow(this.mouseState.x - this.x, 2) + Math.pow(this.mouseState.y - this.y, 2
+                    )) <= this.radius + 10) {
+                    this.mouseState.clickAction()
+                    this.mouseState.clicked = true;
+                }
             }
         }
 
