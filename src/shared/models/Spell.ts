@@ -52,7 +52,6 @@ export class Spell extends Circle {
             this.radius + this.target.radius
         )) {
             if (!this.destroyed) {
-                console.log('hit')
                 this.onTargetHit()
                 this.destroySpell(context)
             }

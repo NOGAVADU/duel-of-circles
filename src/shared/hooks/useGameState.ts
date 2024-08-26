@@ -1,6 +1,5 @@
-import {useEffect, useState} from "react";
-import {Duelant} from "../models";
-import {Spell} from "../models/Spell.ts";
+import {useState} from "react";
+import {Duelant, Spell} from "../models";
 import {getRandomInt} from "../utils";
 
 export interface GameState {
@@ -41,7 +40,7 @@ const initialState: GameState = {
     score: {leftDuelantScore: 0, rightDuelantScore: 0},
 }
 
-export function useGameState() {
+export function useGameState(onDuelantClick: (duelant: DuelantState) => void) {
 
     const [state, setState] = useState<GameState>({...initialState})
 
@@ -51,6 +50,7 @@ export function useGameState() {
         30,
         state.duelantLeftState.color,
         state.duelantLeftState.speed,
+        () => onDuelantClick(state.duelantLeftState)
     )
 
     const duelantRight = new Duelant(
@@ -59,6 +59,7 @@ export function useGameState() {
         30,
         state.duelantRightState.color,
         state.duelantRightState.speed,
+        () => onDuelantClick(state.duelantRightState)
     )
 
     setInterval(() => {
@@ -131,105 +132,35 @@ export function useGameState() {
         }))
     }
 
-    const setLeftDuelantColor = (color: string) => {
+    const setLeftDuelantState = (state: DuelantState) => {
         setState(prevState => ({
             ...prevState,
             duelantRightState: getActualRightDuelantState(),
             duelantLeftState: {
                 ...getActualLeftDuelantState(),
-                color
+                ...state
             }
         }))
     }
 
-    const setRightDuelantColor = (color: string) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantRightState: {
-                ...getActualRightDuelantState(),
-                color
-            }
-        }))
-    }
-
-    const setLeftDuelantSpellColor = (color: string) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantRightState: getActualRightDuelantState(),
-            duelantLeftState: {
-                ...getActualLeftDuelantState(),
-                spellsColor: color
-            }
-        }))
-    }
-
-    const setRightDuelantSpellColor = (color: string) => {
+    const setRightDuelantState = (state: DuelantState) => {
         setState(prevState => ({
             ...prevState,
             duelantLeftState: getActualLeftDuelantState(),
             duelantRightState: {
                 ...getActualRightDuelantState(),
-                spellsColor: color
+                ...state
             }
         }))
     }
 
-    const setLeftDuelantSpellRate = (spellRate: number) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantRightState: getActualRightDuelantState(),
-            duelantLeftState: {
-                ...getActualLeftDuelantState(),
-                spellRate
-            }
-        }))
-    }
-
-    const setRightDuelantSpellRate = (spellRate: number) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantLeftState: getActualLeftDuelantState(),
-            duelantRightState: {
-                ...getActualRightDuelantState(),
-                spellRate
-            }
-        }))
-    }
-
-    const setLeftDuelantSpeed = (speed: number) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantRightState: getActualRightDuelantState(),
-            duelantLeftState: {
-                ...getActualLeftDuelantState(),
-                speed
-            }
-        }))
-    }
-
-    const setRightDuelantSpeed = (speed: number) => {
-        setState(prevState => ({
-            ...prevState,
-            duelantLeftState: getActualLeftDuelantState(),
-            duelantRightState: {
-                ...getActualRightDuelantState(),
-                speed
-            }
-        }))
-    }
 
     const objectsToDraw = [duelantLeft, duelantRight]
 
     return {
         state,
         objectsToDraw,
-        setLeftDuelantColor,
-        setRightDuelantColor,
-        setLeftDuelantSpellColor,
-        setRightDuelantSpellColor,
-        setLeftDuelantSpellRate,
-        setRightDuelantSpellRate,
-        setLeftDuelantSpeed,
-        setRightDuelantSpeed,
+        setLeftDuelantState,
+        setRightDuelantState,
     }
 }

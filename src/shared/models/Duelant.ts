@@ -5,7 +5,9 @@ export class Duelant extends Circle {
     mouseX: number = 0;
     mouseY: number = 0;
     speed: number;
-    spells: Spell[];
+    spells: Spell[] = [];
+    isClicked: boolean = false;
+    onClick: () => void;
 
     constructor(
         x: number,
@@ -13,17 +15,19 @@ export class Duelant extends Circle {
         radius: number,
         color: string,
         speed: number,
-        spells: Spell[] = [],
+        onClick: () => void,
     ) {
         super(x, y, radius, color);
         this.speed = speed;
-        this.spells = spells;
+        this.onClick = onClick
     }
 
     init(context: CanvasRenderingContext2D) {
         this.draw(context);
         this.activeWallCollide(context)
-        this.activeCursorCollide(context)
+        this.activeCursorWatch(context)
+        this.activeCursorCollide()
+        this.activeClickAction(context)
         this.activeSpellShooting(context)
     }
 
@@ -48,22 +52,7 @@ export class Duelant extends Circle {
         }
     }
 
-    activeCursorCollide(context: CanvasRenderingContext2D) {
-        const getMouseCoords = (e: MouseEvent) => {
-            const rect = context.canvas.getBoundingClientRect();
-            if (rect) {
-                this.mouseX = e.clientX - rect.left;
-                this.mouseY = e.clientY - rect.top;
-            }
-        }
-
-        context.canvas.addEventListener("mousemove", getMouseCoords)
-        context.canvas.addEventListener("mouseout", () => {
-            context.canvas.removeEventListener("mousemove", getMouseCoords)
-            this.mouseX = 0;
-            this.mouseY = 0;
-        })
-
+    activeCursorCollide() {
         if (!this.mouseX && !this.mouseY) return
 
         if (this.mouseX < this.x + this.radius && this.mouseX > this.x - this.radius) {
@@ -79,10 +68,47 @@ export class Duelant extends Circle {
                 }
             }
         }
+
     }
 
     activeSpellShooting(context: CanvasRenderingContext2D) {
         this.spells = this.spells.filter(s => !s.destroyed)
         this.spells.forEach(s => s.init(context))
+    }
+
+    activeCursorWatch(context: CanvasRenderingContext2D) {
+        const getMouseCoords = (e: MouseEvent) => {
+            const rect = context.canvas.getBoundingClientRect();
+            if (rect) {
+                this.mouseX = e.clientX - rect.left;
+                this.mouseY = e.clientY - rect.top;
+            }
+        }
+
+        context.canvas.addEventListener("mousemove", getMouseCoords)
+        context.canvas.addEventListener("mouseout", () => {
+            context.canvas.removeEventListener("mousemove", getMouseCoords)
+            this.mouseX = 0;
+            this.mouseY = 0;
+        })
+    }
+
+    activeClickAction(context: CanvasRenderingContext2D) {
+        context.canvas.addEventListener("click", () => {
+            if (!this.isClicked) {
+                if (
+                    Math.sqrt(
+                        Math.pow(this.mouseX - this.x, 2) + Math.pow(this.mouseY - this.y, 2)
+                    ) <= this.radius
+                ) {
+                    this.onClick()
+                    this.isClicked = true
+                }
+            }
+        })
+        context.canvas.addEventListener("mouseout", () => {
+            context.canvas.removeEventListener("click", this.onClick)
+            this.isClicked = false
+        })
     }
 }
