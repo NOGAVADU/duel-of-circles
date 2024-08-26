@@ -13,7 +13,7 @@ function App() {
 
         context.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-        game.objects.forEach(object => {
+        game.objectsToDraw.forEach(object => {
             object.init(context);
         })
     }
@@ -22,10 +22,8 @@ function App() {
         <>
             <main className="main">
                 <Canvas canvasSize={canvasSize} canvasRef={canvasRef}/>
+                <div>{`${game.state.score.leftDuelantScore} / ${game.state.score.rightDuelantScore}`}</div>
             </main>
-            <button onClick={() => game.setState()}>
-                Принудительное обновление состояния
-            </button>
             <footer className="footer">
                 Мосолов Даниил | tg: @daaaniiiiiil
             </footer>

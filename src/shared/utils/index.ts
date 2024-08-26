@@ -1,1 +1,1 @@
-export * from './getCanvasMouseCoords.ts'
+export * from './getRandomColor.ts'

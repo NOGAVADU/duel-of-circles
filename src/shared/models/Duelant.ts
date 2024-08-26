@@ -1,9 +1,11 @@
 import {Circle} from "./Circle.ts";
+import {Spell} from "./Spell.ts";
 
 export class Duelant extends Circle {
     mouseX: number = 0;
     mouseY: number = 0;
     speed: number;
+    spells: Spell[];
 
     constructor(
         x: number,
@@ -11,15 +13,18 @@ export class Duelant extends Circle {
         radius: number,
         color: string,
         speed: number,
+        spells: Spell[] = [],
     ) {
         super(x, y, radius, color);
         this.speed = speed;
+        this.spells = spells;
     }
 
     init(context: CanvasRenderingContext2D) {
         this.draw(context);
         this.activeWallCollide(context)
         this.activeCursorCollide(context)
+        this.activeSpellShooting(context)
     }
 
     draw(context: CanvasRenderingContext2D) {
@@ -74,5 +79,10 @@ export class Duelant extends Circle {
                 }
             }
         }
+    }
+
+    activeSpellShooting(context: CanvasRenderingContext2D) {
+        this.spells = this.spells.filter(s => !s.destroyed)
+        this.spells.forEach(s => s.init(context))
     }
 }
