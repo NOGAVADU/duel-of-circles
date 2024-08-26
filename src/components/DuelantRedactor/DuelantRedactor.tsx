@@ -1,6 +1,6 @@
 import styles from './DuelantRedactor.module.css'
-import {DuelantState} from "../../shared/hooks";
 import {ChangeEvent, FormEvent, useState} from "react";
+import {DuelantState} from "../../shared/types";
 
 interface RedactorState {
     isRedactorVisible: boolean,

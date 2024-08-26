@@ -1,22 +1,7 @@
 import {useState} from "react";
 import {Duelant, Spell} from "../models";
 import {getRandomInt} from "../utils";
-
-export interface GameState {
-    duelantLeftState: DuelantState;
-    duelantRightState: DuelantState;
-    score: { leftDuelantScore: number, rightDuelantScore: number };
-}
-
-export interface DuelantState {
-    x: number,
-    y: number,
-    color: string,
-    speed: number,
-    spells: Spell[],
-    spellsColor: string,
-    spellRate: number,
-}
+import {DuelantState, GameState} from "../types";
 
 const initialState: GameState = {
     duelantLeftState: {
