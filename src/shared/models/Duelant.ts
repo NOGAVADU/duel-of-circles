@@ -34,6 +34,12 @@ export class Duelant extends Circle {
             this.y + this.speed - this.radius < 0
         ) {
             this.speed = -this.speed;
+            if (this.y >= context.canvas.height - this.radius) {
+                this.y = context.canvas.height - this.radius;
+            }
+            if (this.y <= this.radius) {
+                this.y = this.radius;
+            }
         }
     }
 
