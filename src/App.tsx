@@ -1,5 +1,5 @@
 import './App.css'
-import {Canvas} from "./components";
+import {Canvas, DuelantSliders} from "./components";
 import {useCanvas, useGameState} from "./shared/hooks";
 import DuelantRedactor from "./components/DuelantRedactor/DuelantRedactor.tsx";
 import {useState} from "react";
@@ -50,15 +50,22 @@ function App() {
         <>
             <main className="main">
                 <div className='battleground'>
-                    <div className='score'>
-                        {getPrettyScore(game.state.score.leftDuelantScore)}
-                    </div>
+                    <aside>
+                        <div className='score'>
+                            {getPrettyScore(game.state.score.leftDuelantScore)}
+                        </div>
+                        <DuelantSliders duelant={game.state.duelantLeftState} onChange={game.setLeftDuelantState}/>
+                    </aside>
                     <Canvas canvasSize={canvasSize} canvasRef={canvasRef}/>
-                    <div className='score'>
-                        {getPrettyScore(game.state.score.rightDuelantScore)}
-                    </div>
+                    <aside>
+                        <div className='score'>
+                            {getPrettyScore(game.state.score.rightDuelantScore)}
+                        </div>
+                        <DuelantSliders duelant={game.state.duelantRightState} onChange={game.setRightDuelantState}/>
+                    </aside>
                 </div>
             </main>
+
             {duelantRedactor.isVisible && (<DuelantRedactor state={duelantRedactor} setState={setDuelantRedactor}/>)}
 
             <footer className="footer">

@@ -42,20 +42,6 @@ function DuelantRedactor(props: DuelantRedactorProps) {
                 />
             </label>
             <label className={styles.label}>
-                Circle Speed:
-                <input
-                    type={'range'}
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={formState.speed}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setFormState({
-                        ...formState,
-                        speed: +e.target.value
-                    })}
-                />
-            </label>
-            <label className={styles.label}>
                 Spells color:
                 <input
                     type={'color'}
@@ -63,20 +49,6 @@ function DuelantRedactor(props: DuelantRedactorProps) {
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setFormState({
                         ...formState,
                         spellsColor: e.target.value
-                    })}
-                />
-            </label>
-            <label className={styles.label}>
-                SpellRate:
-                <input
-                    type={'range'}
-                    min={0.5}
-                    max={5}
-                    step={0.5}
-                    value={formState.spellRate}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setFormState({
-                        ...formState,
-                        spellRate: +e.target.value
                     })}
                 />
             </label>
