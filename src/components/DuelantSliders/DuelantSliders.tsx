@@ -11,7 +11,7 @@ function DuelantSliders({duelant, onChange}: Props) {
 
     return (
         <div className={styles.container}>
-            <label>
+            <label className={styles.label}>
                 Speed: {duelant.speed > 0 ? duelant.speed : -duelant.speed}
                 <input
                     type={'range'}
@@ -22,9 +22,10 @@ function DuelantSliders({duelant, onChange}: Props) {
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         onChange({speed: +e.target.value});
                     }}
+                    className={styles.slider}
                 />
             </label>
-            <label>
+            <label className={styles.label}>
                 SpellRate: {duelant.spellRate}
                 <input
                     type={'range'}
@@ -35,6 +36,7 @@ function DuelantSliders({duelant, onChange}: Props) {
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         onChange({spellRate: +e.target.value});
                     }}
+                    className={styles.slider}
                 />
             </label>
         </div>
