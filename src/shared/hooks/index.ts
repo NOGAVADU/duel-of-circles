@@ -1,3 +1,3 @@
 export * from './useCanvas.ts'
 
-export * from './useGameState.ts'
+export * from './useGame.ts'

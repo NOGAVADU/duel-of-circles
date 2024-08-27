@@ -3,8 +3,11 @@ import {Duelant, Spell} from "../models";
 import {DuelantState, GameState} from "../types";
 import {gameStateInitial} from "../const";
 
-export function useGameState(
-    onDuelantClick: (duelant: DuelantState, setDuelant: (duelant: Partial<DuelantState>) => void) => void,
+export function useGame(
+    actions: {
+        onLeftDuelantClick: () => void,
+        onRightDuelantClick: () => void,
+    }
 ) {
 
     const [state, setState] = useState<GameState>({...gameStateInitial})
@@ -15,10 +18,7 @@ export function useGameState(
         30,
         state.duelantLeftState.color,
         state.duelantLeftState.speed,
-        () => onDuelantClick(
-            state.duelantLeftState,
-            setLeftDuelantState
-        )
+        actions.onLeftDuelantClick
     )
 
     const duelantRight = new Duelant(
@@ -27,10 +27,7 @@ export function useGameState(
         30,
         state.duelantRightState.color,
         state.duelantRightState.speed,
-        () => onDuelantClick(
-            state.duelantRightState,
-            setRightDuelantState
-        )
+        actions.onRightDuelantClick
     )
 
     setInterval(() => {
@@ -60,7 +57,6 @@ export function useGameState(
     }, 1000 / state.duelantRightState.spellRate)
 
     const getActualLeftDuelantState = (): DuelantState => {
-        console.log(duelantLeft.x, duelantLeft.y)
         return {
             ...state.duelantLeftState,
             x: duelantLeft.x,

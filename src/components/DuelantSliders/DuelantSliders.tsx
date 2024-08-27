@@ -4,10 +4,10 @@ import {DuelantState} from "../../shared/types";
 
 interface Props {
     duelant: DuelantState,
-    onChange: (state: Partial<DuelantState>) => void
+    handleChange: (state: Partial<DuelantState>) => void
 }
 
-function DuelantSliders({duelant, onChange}: Props) {
+function DuelantSliders({duelant, handleChange}: Props) {
 
     return (
         <div className={styles.container}>
@@ -20,7 +20,7 @@ function DuelantSliders({duelant, onChange}: Props) {
                     step={1}
                     value={duelant.speed > 0 ? duelant.speed : -duelant.speed}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        onChange({speed: +e.target.value});
+                        handleChange({speed: +e.target.value});
                     }}
                     className={styles.slider}
                 />
@@ -34,7 +34,7 @@ function DuelantSliders({duelant, onChange}: Props) {
                     step={0.5}
                     value={duelant.spellRate}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        onChange({spellRate: +e.target.value});
+                        handleChange({spellRate: +e.target.value});
                     }}
                     className={styles.slider}
                 />
