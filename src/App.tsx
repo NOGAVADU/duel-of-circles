@@ -1,7 +1,6 @@
 import './App.css'
-import {Canvas, DuelantSliders} from "./components";
+import {Canvas, DuelantSliders, DuelantRedactor} from "./components";
 import {useCanvas, useGame} from "./shared/hooks";
-import DuelantRedactor from "./components/DuelantRedactor/DuelantRedactor.tsx";
 import {useState} from "react";
 
 const canvasSize = {width: 960, height: 540}

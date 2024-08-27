@@ -1,1 +1,1 @@
-export {default as Duelant} from './DuelantRedactor.tsx'
+export {default as DuelantRedactor} from './DuelantRedactor.tsx'
