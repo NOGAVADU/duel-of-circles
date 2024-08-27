@@ -1,32 +1,34 @@
 import styles from './DuelantRedactor.module.css'
 import {ChangeEvent, FormEvent, useState} from "react";
-import {DuelantState} from "../../shared/types";
-
-interface RedactorState {
-    isRedactorVisible: boolean,
-    duelantToRedact: DuelantState,
-    onSave: (state: DuelantState) => void,
-}
+import {DuelantRedactorState} from "../../shared/types";
 
 interface DuelantRedactorProps {
-    redactorState: RedactorState,
-    setRedactorState: (state: RedactorState) => void,
+    state: DuelantRedactorState,
+    setState: (state: DuelantRedactorState) => void,
 }
 
 function DuelantRedactor(props: DuelantRedactorProps) {
-    const {redactorState, setRedactorState} = props;
+    const {state, setState} = props;
 
     const [formState, setFormState] = useState({
-        color: redactorState.duelantToRedact.color,
-        speed: redactorState.duelantToRedact.speed,
-        spellsColor: redactorState.duelantToRedact.spellsColor,
-        spellRate: redactorState.duelantToRedact.spellRate,
+        color: state.duelant.color,
+        speed: Math.abs(state.duelant.speed),
+        spellsColor: state.duelant.spellsColor,
+        spellRate: state.duelant.spellRate,
     });
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
-        redactorState.onSave({...redactorState.duelantToRedact, ...formState});
-        setRedactorState({...redactorState, isRedactorVisible: false})
+
+        state.onSubmit({
+            ...formState,
+            speed: state.duelant.speed > 0 ? formState.speed : -formState.speed,
+        })
+
+        setState({
+            ...state,
+            isVisible: false
+        })
     }
 
     return (
@@ -40,7 +42,7 @@ function DuelantRedactor(props: DuelantRedactorProps) {
                 />
             </label>
             <label className={styles.label}>
-                CircleSpeed:
+                Circle Speed:
                 <input
                     type={'range'}
                     min={1}

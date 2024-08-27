@@ -3,6 +3,7 @@ import {Canvas} from "./components";
 import {useCanvas, useGameState} from "./shared/hooks";
 import DuelantRedactor from "./components/DuelantRedactor/DuelantRedactor.tsx";
 import {useState} from "react";
+import {DuelantRedactorState, DuelantState} from "./shared/types";
 
 const canvasSize = {width: 960, height: 540}
 
@@ -12,11 +13,12 @@ const getPrettyScore = (score: number) => {
 
 function App() {
     const canvasRef = useCanvas(draw)
-    const game = useGameState(redactLeftDuelant, redactRightDuelant);
-    const [redactorState, setRedactorState] = useState({
-        isRedactorVisible: false,
-        duelantToRedact: game.state.duelantLeftState,
-        onSave: game.setLeftDuelantState
+    const game = useGameState(openDuelantRedactor);
+    const [duelantRedactor, setDuelantRedactor] = useState<DuelantRedactorState>({
+        isVisible: false,
+        duelant: game.state.duelantLeftState,
+        onSubmit: game.setLeftDuelantState,
+        onStateUpdate: game.handleAppStateUpdate
     });
 
     function draw(context: CanvasRenderingContext2D) {
@@ -29,20 +31,19 @@ function App() {
         })
     }
 
-    function redactLeftDuelant() {
-        setRedactorState({
-            isRedactorVisible: true,
-            duelantToRedact: game.state.duelantLeftState,
-            onSave: game.setLeftDuelantState,
-        })
-    }
-
-    function redactRightDuelant() {
-        setRedactorState({
-            isRedactorVisible: true,
-            duelantToRedact: game.state.duelantRightState,
-            onSave: game.setRightDuelantState,
-        })
+    function openDuelantRedactor(
+        duelant: DuelantState,
+        setDuelant: (duelant: Partial<DuelantState>) => void
+    ) {
+        if (!duelantRedactor.isVisible) {
+            setDuelantRedactor({
+                ...duelantRedactor,
+                isVisible: true,
+                duelant,
+                onSubmit: setDuelant,
+            })
+            game.handleAppStateUpdate()
+        }
     }
 
     return (
@@ -58,12 +59,11 @@ function App() {
                     </div>
                 </div>
             </main>
+            {duelantRedactor.isVisible && (<DuelantRedactor state={duelantRedactor} setState={setDuelantRedactor}/>)}
 
             <footer className="footer">
                 Мосолов Даниил | tg: @daaaniiiiiil
             </footer>
-            {redactorState.isRedactorVisible && (
-                <DuelantRedactor redactorState={redactorState} setRedactorState={setRedactorState}/>)}
         </>
     )
 }

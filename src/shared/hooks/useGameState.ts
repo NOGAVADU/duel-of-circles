@@ -4,8 +4,7 @@ import {DuelantState, GameState} from "../types";
 import {gameStateInitial} from "../const";
 
 export function useGameState(
-    onLeftDuelantClick: (duelant: DuelantState) => void,
-    onRightDuelantClick: (duelant: DuelantState) => void,
+    onDuelantClick: (duelant: DuelantState, setDuelant: (duelant: Partial<DuelantState>) => void) => void,
 ) {
 
     const [state, setState] = useState<GameState>({...gameStateInitial})
@@ -16,7 +15,10 @@ export function useGameState(
         30,
         state.duelantLeftState.color,
         state.duelantLeftState.speed,
-        () => onLeftDuelantClick(state.duelantLeftState)
+        () => onDuelantClick(
+            state.duelantLeftState,
+            setLeftDuelantState
+        )
     )
 
     const duelantRight = new Duelant(
@@ -25,7 +27,10 @@ export function useGameState(
         30,
         state.duelantRightState.color,
         state.duelantRightState.speed,
-        () => onRightDuelantClick(state.duelantRightState)
+        () => onDuelantClick(
+            state.duelantRightState,
+            setRightDuelantState
+        )
     )
 
     setInterval(() => {
@@ -55,6 +60,7 @@ export function useGameState(
     }, 1000 / state.duelantRightState.spellRate)
 
     const getActualLeftDuelantState = (): DuelantState => {
+        console.log(duelantLeft.x, duelantLeft.y)
         return {
             ...state.duelantLeftState,
             x: duelantLeft.x,
@@ -74,7 +80,7 @@ export function useGameState(
         }
     }
 
-    const setLeftDuelantState = (state: DuelantState) => {
+    const setLeftDuelantState = (state: Partial<DuelantState>) => {
         setState(prevState => ({
             ...prevState,
             duelantRightState: getActualRightDuelantState(),
@@ -85,7 +91,7 @@ export function useGameState(
         }))
     }
 
-    const setRightDuelantState = (state: DuelantState) => {
+    const setRightDuelantState = (state: Partial<DuelantState>) => {
         setState(prevState => ({
             ...prevState,
             duelantLeftState: getActualLeftDuelantState(),
@@ -97,11 +103,11 @@ export function useGameState(
     }
 
     const handleAppStateUpdate = () => {
-        setState({
-            ...state,
+        setState(prev => ({
+            ...prev,
             duelantLeftState: getActualLeftDuelantState(),
             duelantRightState: getActualRightDuelantState(),
-        })
+        }))
     }
 
     const incrementDuelantLeftScore = () => {
