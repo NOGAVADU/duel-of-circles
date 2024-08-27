@@ -12,9 +12,7 @@ function DuelantRedactor(props: DuelantRedactorProps) {
 
     const [formState, setFormState] = useState({
         color: state.duelant.color,
-        speed: Math.abs(state.duelant.speed),
         spellsColor: state.duelant.spellsColor,
-        spellRate: state.duelant.spellRate,
     });
 
     const onSubmit = (e: FormEvent) => {
@@ -22,7 +20,6 @@ function DuelantRedactor(props: DuelantRedactorProps) {
 
         state.onSubmit({
             ...formState,
-            speed: state.duelant.speed > 0 ? formState.speed : -formState.speed,
         })
 
         setState({
